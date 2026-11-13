@@ -64,7 +64,9 @@ class AuthenticationService:
             # Authenticate via configured provider
             provider = default_registry.get(user.auth_provider)
             if not provider:
-                raise ValueError(f"Unknown auth provider: {user.auth_provider}")
+                raise AuthenticationError(
+                    f"Authentication provider '{user.auth_provider}' is disabled or unsupported"
+                )
 
             credentials = {"email": email, "password": password}
             authenticated_user = provider.authenticate(credentials)

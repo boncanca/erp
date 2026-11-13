@@ -1,7 +1,9 @@
 import pytest
+from django.test import override_settings
 
 from apps.users.models import User
 from core.identity.models import ExternalIdentity, LoginAudit
+from core.identity.providers.base import ProviderRegistry
 
 
 @pytest.mark.django_db
@@ -30,3 +32,15 @@ def test_login_audit_record_can_be_created():
 
     assert audit.result == "success"
     assert audit.attempted_email == user.email
+
+
+@override_settings(AUTH_ENABLE_OAUTH2_PROVIDER=False)
+def test_oauth2_provider_disabled_by_default():
+    registry = ProviderRegistry()
+    assert registry.get("oauth2") is None
+
+
+@override_settings(AUTH_ENABLE_OAUTH2_PROVIDER=True)
+def test_oauth2_provider_enabled_with_feature_flag():
+    registry = ProviderRegistry()
+    assert registry.get("oauth2") is not None

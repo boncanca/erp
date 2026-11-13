@@ -101,6 +101,9 @@ AUTH_USER_MODEL = "users.User"
 MFA_REQUIRED_BY_DEFAULT = True
 MFA_TOTP_WINDOW = 1  # ±30 seconds for TOTP validation
 
+# Optional auth providers (disabled by default until fully implemented)
+AUTH_ENABLE_OAUTH2_PROVIDER = os.environ.get("AUTH_ENABLE_OAUTH2_PROVIDER", "False") == "True"
+
 # Authentication backends
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",

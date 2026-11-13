@@ -9,6 +9,7 @@ from abc import ABC, abstractmethod
 from typing import Any
 
 from django.contrib.auth import get_user_model
+from django.conf import settings
 
 User = get_user_model()
 
@@ -184,7 +185,8 @@ class ProviderRegistry:
     def _register_default_providers(self):
         """Register built-in providers"""
         self.register("local", LocalAuthProvider())
-        self.register("oauth2", OAuthProvider())
+        if getattr(settings, "AUTH_ENABLE_OAUTH2_PROVIDER", False):
+            self.register("oauth2", OAuthProvider())
 
     def register(self, name: str, provider: BaseAuthProvider):
         """Register a new auth provider"""
